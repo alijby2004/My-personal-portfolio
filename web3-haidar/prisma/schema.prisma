@@ -1,0 +1,183 @@
+// ─────────────────────────────────────────────────────────────────────────
+// Web3 Haidar — Database Schema
+//
+// Design notes:
+// - PowEntry is the core content model. `section` distinguishes the two
+//   POW page zones (ONGOING_JOB vs OTHER_GIG) requested in the spec.
+// - PowEntry has one-to-many relations to PowImage (gallery/screenshots)
+//   and ProofFile (uploaded PDFs/proof documents), so a single entry can
+//   carry a logo, multiple screenshots, and multiple proof documents
+//   without ever needing hardcoded fields for "image 1, image 2...".
+// - Session is a first-class table (not just a signed cookie) so admin
+//   sessions can be revoked server-side (e.g. "log out all devices").
+// - ContactMessage stores every submission so the admin dashboard has a
+//   full inbox even if the email send fails.
+// ─────────────────────────────────────────────────────────────────────────
+
+generator client {
+  provider      = "prisma-client-js"
+  // "native" covers local dev on your own machine. "rhel-openssl-3.0.x"
+  // covers Netlify Functions' AWS Lambda runtime (Amazon Linux 2023,
+  // OpenSSL 3.0). Without this, the query engine binary bundled at build
+  // time often won't load at runtime on Netlify — every Prisma call fails
+  // the same way, which is why login and the DB-backed contact form broke
+  // together even though they're otherwise unrelated code paths.
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ── Auth ────────────────────────────────────────────────────────────────
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  sessions Session[]
+
+  @@map("users")
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  userAgent String?
+  ipAddress String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("sessions")
+}
+
+// ── Proof of Work ──────────────────────────────────────────────────────
+
+enum PowSection {
+  ONGOING_JOB
+  OTHER_GIG
+}
+
+enum PowStatus {
+  ACTIVE
+  COMPLETED
+  WON
+  ARCHIVED
+}
+
+model PowEntry {
+  id          String     @id @default(cuid())
+  section     PowSection
+  category    String // e.g. "Community Management", "Contest", "Content"
+  role        String // e.g. "Community Manager", "Ambassador"
+  projectName String
+  description String     @db.Text
+  fullDetails String?    @db.Text // long-form: deliverables, timeline, notes
+  logoUrl     String?
+  featuredImg String?
+  projectLink String?
+  status      PowStatus  @default(ACTIVE)
+  featured    Boolean    @default(false)
+  pinned      Boolean    @default(false)
+  hidden      Boolean    @default(false)
+  sortOrder   Int        @default(0)
+  eventDate   DateTime? // when the work happened / contest date
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  images      PowImage[]
+  proofFiles  ProofFile[]
+
+  @@index([section, hidden, pinned, sortOrder])
+  @@map("pow_entries")
+}
+
+model PowImage {
+  id         String   @id @default(cuid())
+  powEntryId String
+  url        String
+  publicId   String? // Cloudinary public_id, kept so deletes can also purge the remote asset
+  caption    String?
+  kind       PowImageKind @default(SCREENSHOT)
+  sortOrder  Int      @default(0)
+  createdAt  DateTime @default(now())
+
+  powEntry PowEntry @relation(fields: [powEntryId], references: [id], onDelete: Cascade)
+
+  @@index([powEntryId])
+  @@map("pow_images")
+}
+
+
+enum PowImageKind {
+  SCREENSHOT
+  PROOF
+  WINNER_ANNOUNCEMENT
+}
+
+model ProofFile {
+  id         String   @id @default(cuid())
+  powEntryId String
+  url        String
+  publicId   String? // Cloudinary public_id (resource_type: raw), for cleanup on delete
+  fileName   String
+  fileType   String // e.g. "application/pdf"
+  fileSize   Int // bytes
+  createdAt  DateTime @default(now())
+
+  powEntry PowEntry @relation(fields: [powEntryId], references: [id], onDelete: Cascade)
+
+  @@index([powEntryId])
+  @@map("proof_files")
+}
+
+// ── Contact ────────────────────────────────────────────────────────────
+
+enum ServiceType {
+  COMMUNITY_MANAGEMENT
+  MODERATOR
+  AMBASSADOR
+  CONTENT_CREATION
+  GRAPHIC_DESIGN
+  SOCIAL_MEDIA_MANAGEMENT
+  PARTNERSHIP
+  OTHER
+}
+
+model ContactMessage {
+  id              String      @id @default(cuid())
+  fullName        String
+  email           String
+  telegramHandle  String?
+  projectName     String
+  projectWebsite  String?
+  serviceType     ServiceType
+  budget          String?
+  deadline        String?
+  description     String      @db.Text
+  attachmentUrl   String?
+  read            Boolean     @default(false)
+  emailSent       Boolean     @default(false)
+  ipAddress       String?
+  createdAt       DateTime    @default(now())
+
+  @@index([read, createdAt])
+  @@map("contact_messages")
+}
+
+// ── Site settings (single row, key/value fallback for future flexibility) ─
+
+model Setting {
+  key   String @id
+  value String @db.Text
+
+  @@map("settings")
+}

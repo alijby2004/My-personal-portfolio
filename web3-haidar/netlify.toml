@@ -1,0 +1,18 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+# The official Next.js Runtime plugin is what makes Netlify correctly run
+# Server Actions, middleware, and API routes as Netlify Functions instead
+# of trying to serve the app as a static export. Netlify auto-installs
+# this for most Git-connected Next.js sites, but declaring it explicitly
+# here removes any ambiguity about whether it's active — without it,
+# Server Actions (like the admin login form) are not guaranteed to work.
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+[build.environment]
+  # Ensures `npm install` and the Prisma postinstall hook run against the
+  # same Node version Netlify Functions execute on at runtime, avoiding
+  # native-module mismatches between build time and runtime.
+  NODE_VERSION = "20"

@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-dark-bg text-white bg-site-bg bg-cover bg-fixed bg-no-repeat font-body min-h-screen;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-display;
+  }
+
+  h1 {
+    @apply text-3xl md:text-4xl font-bold mt-7 mb-2;
+  }
+
+  h2 {
+    @apply text-2xl font-semibold mt-8 mb-3 text-lemon-green;
+  }
+
+  h3 {
+    @apply text-lg font-semibold mb-2;
+  }
+
+  p {
+    @apply leading-relaxed text-[#dddddd] mb-3.5 text-[0.97rem];
+  }
+
+  hr {
+    @apply border-t border-lemon-green/20 my-8;
+  }
+}
+
+@layer components {
+  .page-wrapper {
+    @apply max-w-[860px] mx-auto px-6 pt-5 pb-16;
+  }
+
+  .btn-primary {
+    @apply inline-block bg-lemon-green text-black font-display font-bold text-sm
+      px-6 py-2.5 rounded-pill tracking-wide transition-opacity hover:opacity-85;
+  }
+
+  .btn-outline {
+    @apply inline-block border border-lemon-green text-lemon-green font-display font-semibold text-sm
+      px-6 py-2.5 rounded-pill tracking-wide transition-colors
+      hover:bg-lemon-green hover:text-black;
+  }
+
+  .cta-row {
+    @apply flex flex-wrap justify-center gap-3.5 mt-2.5;
+  }
+
+  .badge {
+    @apply bg-lemon-green/10 border border-lemon-green/35 text-lemon-green
+      px-4 py-1.5 rounded-full text-[0.82rem] font-display font-medium tracking-wide;
+  }
+
+  .glass-card {
+    @apply bg-card-bg/85 backdrop-blur-md border border-lemon-green/20 rounded-card
+      transition-colors duration-200 hover:border-lemon-green;
+  }
+}
