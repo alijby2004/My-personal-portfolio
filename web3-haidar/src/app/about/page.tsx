@@ -25,10 +25,10 @@ export default function AboutPage() {
 
       <h2>Who Am I?</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        {/* Physical Identity */}
+        {/* Physical Identity Card */}
         <div className="bg-[#1f0d14] border border-pink-500/20 rounded-3xl p-6 transition-all hover:border-pink-500/40">
-          <div className="relative w-32 h-32 mx-auto mb-4 bg-pink-900/20 rounded-2xl border border-pink-500/30 flex items-center justify-center">
-            <Image src="https://i.ibb.co/S4QYYWdh/68984-removebg-preview.png" alt="Physical Identity" width={100} height={120} />
+          <div className="relative w-40 h-40 mx-auto mb-4 bg-pink-900/20 rounded-2xl border-b-4 border-lemon-green flex items-center justify-center overflow-hidden">
+            <Image src="https://i.ibb.co/S4QYYWdh/68984-removebg-preview.png" alt="Physical Identity" width={160} height={190} className="object-contain mt-4" />
           </div>
           <h3 className="text-xl font-bold text-center mb-4">Physical Identity</h3>
           <div className="space-y-3 text-[0.9rem] text-gray-300">
@@ -40,10 +40,10 @@ export default function AboutPage() {
           </div>
         </div>
 
-        {/* Web3 Identity */}
+        {/* Web3 Identity Card */}
         <div className="bg-[#1f0d14] border border-pink-500/20 rounded-3xl p-6 transition-all hover:border-pink-500/40">
-          <div className="relative w-32 h-32 mx-auto mb-4 bg-pink-900/20 rounded-2xl border border-pink-500/30 flex items-center justify-center">
-            <Image src="https://i.ibb.co/yFHsCypR/68844-removebg-preview.png" alt="Web3 Identity" width={100} height={100} />
+          <div className="relative w-40 h-40 mx-auto mb-4 bg-pink-900/20 rounded-2xl border-b-4 border-lemon-green flex items-center justify-center overflow-hidden">
+            <Image src="https://i.ibb.co/yFHsCypR/68844-removebg-preview.png" alt="Web3 Identity" width={160} height={160} className="object-contain mt-4" />
           </div>
           <h3 className="text-xl font-bold text-center mb-4">Web3 Identity</h3>
           <div className="space-y-3 text-[0.9rem] text-gray-300">
@@ -58,7 +58,6 @@ export default function AboutPage() {
       <h2>What I Do</h2>
       <p>I help Web3 projects communicate complex ideas in a simple and understandable way through educational content and storytelling.</p>
       <p>I also support communities through moderation and community management, ensuring members feel welcomed, valued, and heard. I believe strong communities are built on trust, engagement, and a positive environment.</p>
-      <p>Beyond answering questions and keeping discussions active, I help maintain healthy communities by preventing scams, reducing spam, and creating a safe space where users can confidently interact and grow alongside the ecosystem.</p>
 
       <h2>My Journey</h2>
       <div className="relative pl-7 my-5">
@@ -74,10 +73,10 @@ export default function AboutPage() {
 
       <div className="text-center py-8 bg-[#1f0d14] rounded-3xl border border-pink-500/20 mt-10">
         <Image src="https://i.ibb.co/8gXphpRk/69937-removebg-preview.png" alt="Haidar" width={200} height={200} className="inline-block mb-4" />
-        <p className="font-bold text-white mb-6">Thank you for taking the time to learn more about me and my journey 🫡</p>
+        <p className="font-bold text-white mb-6 px-4">Thank you for taking the time to learn more about me and my journey 🫡</p>
         <div className="flex justify-center gap-4">
-          <Link href="/pow" className="px-6 py-3 rounded-full border border-pink-500 text-pink-200 hover:bg-pink-500/10">View My Work</Link>
-          <Link href="/contact" className="px-6 py-3 rounded-full bg-pink-600 text-white hover:bg-pink-500">Contact Me</Link>
+          <Link href="/pow" className="px-6 py-3 rounded-full border border-pink-500 text-pink-200 hover:bg-pink-500/10 transition">View My Work</Link>
+          <Link href="/contact" className="px-6 py-3 rounded-full bg-pink-600 text-white hover:bg-pink-500 transition">Contact Me</Link>
         </div>
       </div>
     </PageShell>
