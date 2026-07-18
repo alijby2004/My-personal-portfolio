@@ -72,7 +72,7 @@ export default function AboutPage() {
       </div>
 
       <div className="text-center py-8 bg-[#1f0d14] rounded-3xl border border-pink-500/20 mt-10">
-        <Image src="https://i.ibb.co/8gXphpRk/69937-removebg-preview.png" alt="Haidar" width={200} height={200} className="inline-block mb-4" />
+        <Image src="https://i.ibb.co/3ydpX4Ff/96417-removebg-preview.png" alt="Haidar" width={200} height={200} className="inline-block mb-4" />
         <p className="font-bold text-white mb-6 px-4">Thank you for taking the time to learn more about me and my journey 🫡</p>
         <div className="flex justify-center gap-4">
           <Link href="/pow" className="px-6 py-3 rounded-full border border-pink-500 text-pink-200 hover:bg-pink-500/10 transition">View My Work</Link>
